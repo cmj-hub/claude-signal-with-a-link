@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — 2026-10-10
+
+- A signal needs a live page. The operator opens the URL and sets `page` to `live`.
+- Scorer refuses parked, dead, unknown, and a URL with no `page`. It still does not fetch the page.
+
 ## 0.1.0 — 2026-10-08
 
 - First public MIT release.

@@ -33,6 +33,7 @@ GOOD = {
     "event": "Posted a Demand Gen Lead role on LinkedIn",
     "url": "https://www.linkedin.com/jobs/view/4019283741",
     "date": "2026-10-04",
+    "page": "live",
 }
 
 
@@ -86,6 +87,34 @@ class ScoreSignal(unittest.TestCase):
         result = score({**GOOD, "url": "linkedin.com/jobs/view/1"})
         self.assertEqual(result.returncode, 1)
         self.assertIn("not a public http", result.stdout)
+
+    def test_parked_page_is_refused(self):
+        result = score({**GOOD, "page": "parked"})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("page is parked", result.stdout)
+        self.assertNotIn("a dated, linkable signal", result.stdout)
+
+    def test_dead_page_is_refused(self):
+        result = score({**GOOD, "page": "dead"})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("page is dead", result.stdout)
+        self.assertNotIn("a dated, linkable signal", result.stdout)
+
+    def test_unknown_page_is_refused(self):
+        result = score({**GOOD, "page": "unknown"})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("page is unknown", result.stdout)
+
+    def test_server_answered_is_not_a_live_page(self):
+        result = score({**GOOD, "page": "200"})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("page is unknown", result.stdout)
+
+    def test_missing_page_is_refused(self):
+        payload = {k: v for k, v in GOOD.items() if k != "page"}
+        result = score(payload)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("page is unknown", result.stdout)
 
     def test_short_event_is_refused(self):
         result = score({**GOOD, "event": "hiring"})

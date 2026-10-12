@@ -1,6 +1,6 @@
 # Buying signal skill for Claude Code
 
-A buying signal is a dated, linkable event — something the prospect did publicly, on a day you can name, at a URL you can open. State is not a signal. An intent score without a URL and a date is refused.
+A buying signal is a dated, linkable event — something the prospect did publicly, on a day you can name, at a URL you can open. The page has to be live. State is not a signal. An intent score without a URL and a date is refused.
 
 ## In 60 seconds
 
@@ -23,9 +23,10 @@ python3 skills/signal-with-a-link/scripts/score.py --file skills/signal-with-a-l
 The build guide teaches a human. The pack teaches an agent.
 
 ```text
-GOOD  Posted Demand Gen Lead · linkedin.com/jobs/… · 2026-10-04     →  exit 0
-BAD   intent_score: 87 · no url · no date                            →  exit 1
-BAD   "Series B" · example.com/about · 2026-10-01                    →  exit 1
+GOOD  Posted Demand Gen Lead · linkedin.com/jobs/… · live · 2026-10-04 →  exit 0
+BAD   intent_score: 87 · no url · no date                              →  exit 1
+BAD   "Series B" · example.com/about · 2026-10-01                      →  exit 1
+BAD   job URL · parked domain                                          →  exit 1
 ```
 
 ## Install
@@ -75,7 +76,7 @@ This pack drafts and scores. It will not pick this quarter's signal sources, ing
 
 ## What is a buying signal?
 
-A buying signal is a dated, linkable event: a public action with a URL you can open and an ISO date you can name. A job post four days ago with a LinkedIn URL is a signal. "Series B" is state. An intent score of 87 with no link is a guess.
+A buying signal is a dated, linkable event: a public action with a URL you can open, a live page, and an ISO date you can name. A job post four days ago with a LinkedIn URL is a signal. "Series B" is state. An intent score of 87 with no link is a guess. A parked domain is not a signal.
 
 ## Do I need a paid intent vendor to start?
 
@@ -87,7 +88,7 @@ Only after the link and the date exist. The banned line is public: no intent sco
 
 ## Will this invent a URL if I do not have one?
 
-No. If you cannot open a page, you do not have a signal yet. Leave the account off.
+No. If you cannot open a live page, you do not have a signal yet. Leave the account off. A parked or dead page is not a signal.
 
 ## On the site
 

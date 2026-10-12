@@ -1,6 +1,6 @@
 ---
 name: signal-with-a-link
-description: "Score a buying signal as a dated, linkable event. Refuse firmographic state and any intent score that lacks both a URL and a date. Use when validating a signal, anchoring cold email or a PSP, or checking whether a claim is checkable. Not for writing the email (use cold-email), not for the five-part PSP (use psp), not for who to call this week (use prospect-list)."
+description: "Score a buying signal as a dated, linkable event on a live public page. Refuse firmographic state, a parked or dead page, and any intent score that lacks both a URL and a date. Use when validating a signal, anchoring cold email or a PSP, or checking whether a claim is checkable. Not for writing the email (use cold-email), not for the five-part PSP (use psp), not for who to call this week (use prospect-list)."
 argument-hint: "[kickoff | validate | score | event-or-url]"
 allowed-tools: Read Write Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/score.py:*)
 license: MIT
@@ -9,7 +9,7 @@ models: ""
 
 # Signal with a link
 
-A signal is a **dated, linkable event**. Something the prospect (or their company) did publicly, on a day you can name, at a URL you can open.
+A signal is a **dated, linkable event**. Something the prospect (or their company) did publicly, on a day you can name, at a URL you can open. The page has to be live.
 
 **Banned:** no intent score without a URL and a date.
 
@@ -35,6 +35,7 @@ One JSON object:
   "event": "Posted a Demand Gen Lead role on LinkedIn",
   "url": "https://www.linkedin.com/jobs/view/4019283741",
   "date": "2026-10-04",
+  "page": "live",
   "source_type": "job_post"
 }
 ```
@@ -44,6 +45,7 @@ One JSON object:
 | `event` | yes | The observable thing they did. Not a costume label. |
 | `url` | yes | A public `http` or `https` page someone else can open. |
 | `date` | yes | ISO `YYYY-MM-DD` of the day the event was published. ≤90 days old. |
+| `page` | yes | `live` after you open the URL. Parked, dead, and unopened refuse. |
 | `company` | no | Who did it. |
 | `source_type` | no | `job_post`, `funding`, `launch`, `hire`, `pricing_change`, `content`, other. |
 | `intent_score` | no | Allowed **only** when both `url` and `date` are present. |
@@ -57,6 +59,7 @@ One JSON object:
 | Shipped enterprise pricing — with changelog URL + date | Intent score 87 with no link |
 | Hired a new CRO — with press URL + date | A job post with no date |
 | Pricing page flipped to "Contact us" — with archive or page URL + date | A funding rumor with no URL |
+| Job post you opened this week — URL + date + `page: live` | A parked domain, a dead page, or a URL you have not opened |
 
 State is not a signal. A dated link is.
 
@@ -70,6 +73,7 @@ Refuse these before you invent a workaround:
 4. **Unlinkable claim.** "I saw it on LinkedIn" with no URL.
 5. **Stale link.** Date older than 90 days — find a fresher event.
 6. **Future date.** Use the publish day, not tomorrow.
+7. **Parked, dead, or unopened page.** Open the URL. Set `page` to `live`. A for-sale domain is not a signal.
 
 ## Kickoff (15 minutes)
 
@@ -77,13 +81,13 @@ Copy this list and tick it in order.
 
 - [ ] 1. Pick one account from your book (or use the Northwind sample).
 - [ ] 2. Find one public thing they did in the last 90 days.
-- [ ] 3. Paste the page URL. Write the event in one sentence. Write the ISO date.
+- [ ] 3. Paste the page URL. Open it. Write `page` as `live`. Write the event in one sentence. Write the ISO date.
 - [ ] 4. Save as `gtm/signal.json`.
 - [ ] 5. Run `python3 ${CLAUDE_SKILL_DIR}/scripts/score.py --file gtm/signal.json`.
 
 Go back to step 3 if step 5 exits 1. Stop when it exits 0; the last line is `Next: /psp:psp`. Say it to the user.
 
-Do not invent a URL. If you cannot open a page, you do not have a signal yet — leave the account off and say so.
+Do not invent a URL. If you cannot open a live page, you do not have a signal yet — leave the account off and say so.
 
 ## Validate
 
@@ -106,7 +110,7 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/score.py --file ${CLAUDE_SKILL_DIR}/examples
 
 | File | Exit | Why |
 |---|---|---|
-| `examples/signal-good.json` | 0 | Dated LinkedIn job post with a URL. |
+| `examples/signal-good.json` | 0 | Dated LinkedIn job post with a live URL. |
 | `examples/signal-with-intent.json` | 0 | Intent score allowed because URL + date are present. |
 | `examples/signal-no-url.json` | 1 | Event + date, no link. |
 | `examples/signal-no-date.json` | 1 | Event + URL, no date. |

@@ -8,8 +8,9 @@ Stdlib only. No network. No paid APIs.
   python3 scripts/score.py --file examples/signal-good.json --json
   python3 scripts/score.py --file examples/signal-good.json --as-of 2026-10-08
 
-A signal is a dated, linkable event. An intent score without a URL and a
-date is refused. Firmographic state is not a signal.
+A signal is a dated, linkable event on a live page. An intent score
+without a URL and a date is refused. Firmographic state is not a signal.
+A parked or dead page is not a signal.
 
 Exit codes: 0 scored, 1 refused (fix the draft), 2 unreadable input.
 """
@@ -179,6 +180,14 @@ def evaluate(data: dict, as_of: date) -> dict:
         reasons.append("missing url; a signal without a link is not a signal")
     elif not url_ok(url):
         reasons.append("url is not a public http(s) link; paste the page you can open")
+    else:
+        page = nonempty_text(data.get("page")).casefold()
+        if page == "parked":
+            reasons.append("page is parked; a for-sale domain is not a signal")
+        elif page == "dead":
+            reasons.append("page is dead; a dead page is not a signal")
+        elif page != "live":
+            reasons.append("page is unknown; open the URL and set page to live")
 
     parsed_date: date | None = None
     if not raw_date:

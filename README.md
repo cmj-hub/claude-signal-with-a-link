@@ -98,7 +98,7 @@ No. If you cannot open a page, you do not have a signal yet. Leave the account o
 
 [**Growth Audit**](https://jaymountconsulting.com/growth-audit) — where your go-to-market stack is leaking, sent to your inbox.
 
-[**The Friday Signal**](https://jaymountconsulting.com/newsletter/signal) — one free edition a week on building GTM systems that compound. No pitch in it.
+[**The Friday Signal**](https://jaymountconsulting.com/newsletter/signal): free emails on building GTM systems that compound. No pitch in it. One click unsubscribes.
 
 ## Suite → course → Operator Pass
 

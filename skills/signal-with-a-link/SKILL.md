@@ -2,7 +2,7 @@
 name: signal-with-a-link
 description: "Score a buying signal as a dated, linkable event. Refuse firmographic state and any intent score that lacks both a URL and a date. Use when validating a signal, anchoring cold email or a PSP, or checking whether a claim is checkable. Not for writing the email (use cold-email), not for the five-part PSP (use psp), not for who to call this week (use prospect-list)."
 argument-hint: "[kickoff | validate | score | event-or-url]"
-allowed-tools: Read Write Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/score.py:*)
+allowed-tools: Read Write(./gtm/**) Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/score.py:*)
 license: MIT
 models: ""
 ---

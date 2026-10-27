@@ -13,7 +13,7 @@
       "source": "./",
       "description": "Score a buying signal as a dated, linkable event. Refuse intent scores without a URL and a date.",
       "category": "productivity",
-      "version": "0.1.0"
+      "version": "0.1.1"
     }
   ]
 }
